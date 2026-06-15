@@ -35,7 +35,7 @@ jobs:
         env:
           VITE_PUBLIC_ENVIRONMENT: dev
           VITE_PUBLIC_VERSION: ${{ github.sha }}
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Build staging site
         if: github.ref == 'refs/heads/staging' || github.base_ref == 'staging'
@@ -43,14 +43,14 @@ jobs:
         env:
           VITE_PUBLIC_ENVIRONMENT: staging
           VITE_PUBLIC_VERSION: ${{ github.sha }}
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Upload preview artifact for develop
         if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
           name: develop-dist
-          path: dist
+          path: build
 
   deploy-staging:
     if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
@@ -81,7 +81,7 @@ jobs:
         env:
           VITE_PUBLIC_ENVIRONMENT: staging
           VITE_PUBLIC_VERSION: ${{ github.sha }}
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -89,7 +89,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./build
 
       - name: Deploy to GitHub Pages
         id: deployment
